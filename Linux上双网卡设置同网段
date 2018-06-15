@@ -1,0 +1,16 @@
+  今天发现在工控机上面设置两个有线网卡，将IP设置为同一个网段，方便喷码机和客户端操作，但是发现设置好静态IP之后连接以太网ping不通开始尝试，发现一个网口可以ping通两个IP地址，而且在win端cmd执行arp -a命令，发现两个IP都是指向同一个MAC地址，开始发现是MAC地址混乱，在各种尝试后终于解决问题：
+  
+  echo "210 local100" >> /etc/iproute2/rt_tables
+  echo "220 local200" >> /etc/iproute2/rt_tables
+
+  ip route add 192.168.0.0（网段）/24 dev enp3s0（网卡名） src 192.168.0.120（网卡IP地址） table local100
+  ip route add 192.168.0.0（网段）/24 dev enp4s0（网卡名） src 192.168.0.121（网卡IP地址） table local200
+  ip route add default dev enp3s0（网卡名） table local100
+  ip route add default dev enp4s0（网卡名） table local200
+
+  ip rule add from 192.168.0.120 table local100
+  ip rule add from 192.168.0.121 table local200
+
+  ip route flush cache
+  
+  执行上述命令之后，连接不同的网口即可ping通对应的ip，问题解决。
