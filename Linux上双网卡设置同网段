@@ -14,3 +14,7 @@
   ip route flush cache
   
   执行上述命令之后，连接不同的网口即可ping通对应的ip，问题解决。
+
+  linux内核 在响应外部ARP请求的时候，2块网卡在同一个路由里面，因此都有机会去响应arp请求，因此出现了 MAC地址错乱的情况，现在的思路就是把2块网卡分到2个不同的路由表中，这样就不出现MAC地址冲突的事情了
+  
+  参考：http://bbs.chinaunix.net/thread-1622182-1-1.html
