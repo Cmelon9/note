@@ -1,0 +1,35 @@
+  工控机在长时间使用下发现wifi会经常性断开，并弹出提示框，所以先使用shell脚本解决一时的问题。
+  #!/bin/bash
+
+  SSID=$(/sbin/iwgetid --raw)
+
+  if [ -z "$SSID" ]
+  then
+      echo "'$(date -Is)' wifi interface is down, trying to reconnect" >> /root/wifi-log.txt
+      nmcli device wifi
+      sleep 2
+      nmcli c del 'FWFC-psk'
+      sleep 5
+      export DISPLAY=:0
+      wmctrl -F -c '需要 Wi-Fi 网络认证'
+      sleep 2
+      nmcli device wifi connect 'FWFC-psk' password '123456789'
+  fi
+
+  echo "wifi check finish"
+  
+  在换网卡，换驱动后排除这些可能，后来考虑network-manager的稳定性，卸载network-manager后使用命令行连接wifi，wpasupplicant会自动重连，目前测试稳定，下面是命令行连wifi的方法，主要是修改/etc/network/interfaces
+  
+  auto wlp1s0(网卡名)
+  iface wlp1s0(网卡名) inet dhcp
+  pre-up ip link set wlp1s0(网卡名) up
+  pre-up iwconfig wlan0 essid ssid
+  wpa-ssid XXXXX(SSID)
+  wpa-psk XXXXX（密码）
+  保存修改，在命令行输入：sudo ifup wlp1s0，即完成wifi设置。
+  备注：个人觉得此方法比较稳定，而且会自动重连，但在我搜索资料和个人尝试下，没有发现可以自动连接无密码的wifi，这是一个缺点，因为我公司的wifi网络是没有密码的，所以有点麻烦，以后有办法再解决。
+  
+  附上命令行连无密码wifi命令：
+  启动无线网卡：ip link set wlp1s0 up
+  扫描附近wifi：iwlist wlp1s0 scan
+  连接无密码wifi：iw dev wlp1s0 connect xxx（SSID）
