@@ -1,4 +1,4 @@
-  工控机在长时间使用下发现wifi会经常性断开，并弹出提示框，所以先使用shell脚本解决一时的问题。
+  工控机在长时间使用下发现wifi会经常性断开，并弹出提示框，所以先使用shell脚本解决一时的问题。<br>
   `#!/bin/bash
 
   SSID=$(/sbin/iwgetid --raw)
@@ -18,18 +18,18 @@
 
   echo "wifi check finish"`
   
-  在换网卡，换驱动后排除这些可能，后来考虑network-manager的稳定性，卸载network-manager后使用命令行连接wifi，wpasupplicant会自动重连，目前测试稳定，下面是命令行连wifi的方法，主要是修改/etc/network/interfaces
+  在换网卡，换驱动后排除这些可能，后来考虑network-manager的稳定性，卸载network-manager后使用命令行连接wifi，wpasupplicant会自动重连，目前测试稳定，下面是命令行连wifi的方法，主要是修改/etc/network/interfaces<br><br>
   
   `auto wlp1s0(网卡名)
   allow-hotplus wlp1s0(网卡名)
   iface wlp1s0(网卡名) inet dhcp
   wpa-ssid XXXXX(SSID)
   wpa-psk XXXXX（密码）`
-  上面为连接有密码的wifi方法，如果需要连接无密码保护的wifi需要改成以下内容
+  上面为连接有密码的wifi方法，如果需要连接无密码保护的wifi需要改成以下内容<br>
   `auto wlp1s0(网卡名)
   allow-hotplus wlp1s0(网卡名)
   iface wlp1s0(网卡名) inet dhcp
   wireless-essid XXXXX(SSID)`
-  参考：https://raspberrypi.stackexchange.com/questions/15393/connect-to-unsecured-wireless-network
+  参考：https://raspberrypi.stackexchange.com/questions/15393/connect-to-unsecured-wireless-network<br>
   
   保存修改，在命令行输入：sudo ifup wlp1s0，即完成wifi设置。
