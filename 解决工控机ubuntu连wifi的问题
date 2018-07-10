@@ -33,3 +33,31 @@
   参考：https://raspberrypi.stackexchange.com/questions/15393/connect-to-unsecured-wireless-network
   
   保存修改，在命令行输入：sudo ifup wlp1s0，即完成wifi设置。
+  
+  更新：之前的方法在连接有密码保护的wifi时状态稳定，但是连接无密码保护的wifi时断开不会重连，现在用wpa来管理wifi
+  
+  在/etc/wpa_supplicant/目录下建一个文件，我的是wpa_supplicant.conf，里面填写需要连接的wifi信息。
+  有密码wifi：
+  network={
+  ssid="ssid"
+  psk="password"
+  }
+  无密码wifi:
+  networ={
+  ssid="ssid"
+  key_mgmt=NONE
+  }
+  在/etc/network/interfaces文件下写入
+  auto wlp1s0（网卡名）
+  iface wlp1s0(网卡名) inet dhcp
+  
+  pre-up wpa_supplicant -B -iwlp1s0 -Dnl80211 -c/etc/wpa_supplicant/wpa_supplicant.conf
+  此命令参考：https://wiki.archlinux.org/index.php/WPA_supplicant_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#.E6.A6.82.E8.A7.88
+  
+  至此无密码wifi并不会自动重连，需要进行以下操作：
+  1. 将/etc/ifplugd/action.d/目录下的ifupdown文件备份，如果无此文件忽略此步
+  2. 复制脚本到上面的目录下 cp /etc/wpa_supplicant/ifupdown.sh ./ifupdown
+  3. 重启
+  此时wifi即可以达到重连的目的。
+  
+  在删除network-manager之后没有了图形界面设置wifi和有线网卡信息，所以我用QT做了一个小软件来替代network-manager，如有需要微博私信：dr鸠朗
