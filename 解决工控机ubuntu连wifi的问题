@@ -59,5 +59,6 @@
   2. 复制脚本到上面的目录下 cp /etc/wpa_supplicant/ifupdown.sh ./ifupdown
   3. 重启
   此时wifi即可以达到重连的目的。
+  参考：https://raspberrypi.stackexchange.com/questions/4120/how-to-automatically-reconnect-wifi
   
   在删除network-manager之后没有了图形界面设置wifi和有线网卡信息，所以我用QT做了一个小软件来替代network-manager，如有需要微博私信：dr鸠朗
