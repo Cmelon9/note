@@ -1,5 +1,5 @@
   工控机在长时间使用下发现wifi会经常性断开，并弹出提示框，所以先使用shell脚本解决一时的问题。
-  #!/bin/bash
+ ` #!/bin/bash
 
   SSID=$(/sbin/iwgetid --raw)
 
@@ -16,7 +16,7 @@
       nmcli device wifi connect 'FWFC-psk' password '123456789'
   fi
 
-  echo "wifi check finish"
+  echo "wifi check finish" `
   
   在换网卡，换驱动后排除这些可能，后来考虑network-manager的稳定性，卸载network-manager后使用命令行连接wifi，wpasupplicant会自动重连，目前测试稳定，下面是命令行连wifi的方法，主要是修改/etc/network/interfaces
   
